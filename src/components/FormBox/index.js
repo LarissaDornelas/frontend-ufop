@@ -58,7 +58,7 @@ const FormBox = props => {
           />
 
           <button type="button" onClick={handleSave} className="save-button">
-            {loading ? <CircularProgress /> : "Salvar"}
+            {loading ? <CircularProgress color="secondary" /> : "Salvar"}
           </button>
         </div>
       </form>
