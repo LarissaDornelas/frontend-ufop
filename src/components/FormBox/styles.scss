@@ -1,6 +1,4 @@
-import styled from "styled-components";
-
-export const BoxContainer = styled.div`
+.box-container {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -18,14 +16,14 @@ export const BoxContainer = styled.div`
     display: flex;
     justify-content: flex-end;
   }
-`;
+}
 
-export const CloseButton = styled.button`
+.close-button {
   background: transparent;
   border: none;
-`;
+}
 
-export const Form = styled.form`
+.form {
   display: flex;
   width: 100%;
 
@@ -40,6 +38,10 @@ export const Form = styled.form`
     &:focus {
       outline: none;
     }
+  }
+
+  input[type="file"] {
+    display: none;
   }
 
   textarea {
@@ -59,40 +61,53 @@ export const Form = styled.form`
   h3 {
     text-transform: uppercase;
   }
-`;
+}
 
-export const Group = styled.div`
+.image-group {
   display: flex;
   flex-direction: column;
-  align-items: ${props => props.align};
+  align-items: center;
   padding: 0 10px;
-  flex: ${props => props.flex};
-`;
+  flex: 1;
+}
 
-export const SaveButton = styled.button`
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 10px;
+  flex: 2;
+}
+
+.save-button {
   color: #fff;
   background: #ff5757;
   height: 62px;
   width: 195px;
   border-radius: 7px;
   margin-left: 461px;
-`;
-
-export const ImageButton = styled.button`
+}
+.image-selector {
   display: flex;
   justify-content: center;
+  align-items: center;
   color: #fff;
   background: #938585;
   height: 50px;
   width: 100%;
   border-radius: 7px;
+  margin-top: 64px;
 
   p {
     margin: 5px 4px 4px 4px;
   }
-`;
 
-export const UploadImage = styled.img`
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+.upload-image {
   max-width: 328px;
   margin: 58px 0 12px 0;
-`;
+}

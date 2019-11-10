@@ -1,45 +1,68 @@
 import React from "react";
+import InputMask from "react-input-mask";
 import CloseIcon from "@material-ui/icons/Close";
 import CameraAlt from "@material-ui/icons/CameraAlt";
-import logo from "../../assets/images/image-upload.png";
-import {
-  BoxContainer,
-  CloseButton,
-  Form,
-  Group,
-  SaveButton,
-  ImageButton,
-  UploadImage
-} from "./styles";
+
+import "./styles.scss";
 
 const FormBox = props => {
-  const { actionButton } = props;
-  return (
-    <BoxContainer>
-      <div>
-        <CloseButton onClick={actionButton}>
-          <CloseIcon color="disabled" />
-        </CloseButton>
-      </div>
-      <Form>
-        <Group flex={1} align={"flex-start"}>
-          <UploadImage src={logo} alt={"image"} />
-          <ImageButton type="button " onClick={() => alert("hey")}>
-            <CameraAlt /> <p>Adicionar Imagem</p>
-          </ImageButton>
-        </Group>
+  const { actionButton, formValues, handleChange, handleSave } = props;
 
-        <Group flex={2} align={"flex-start"}>
+  return (
+    <div className="box-container">
+      <div>
+        <button className="close-button" onClick={actionButton}>
+          <CloseIcon color="disabled" />
+        </button>
+      </div>
+      <form className="form">
+        <div className="image-group">
+          <label className="image-selector" htmlFor="image">
+            <CameraAlt /> <p>Adicionar Imagem</p>
+          </label>
+          <p>{formValues.image}</p>
+          <input
+            name="image"
+            id="image"
+            type="file"
+            accept="image/*"
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-group">
           <h3>Adicionar Objeto</h3>
 
-          <input placeholder="Titulo*" required />
-          <textarea placeholder="Descrição*" rows={3} required />
-          <input placeholder="Telefone*" required />
+          <input
+            name="title"
+            value={formValues.title}
+            onChange={handleChange}
+            placeholder="Titulo*"
+            required
+          />
+          <textarea
+            name="description"
+            value={formValues.description}
+            onChange={handleChange}
+            placeholder="Descrição*"
+            rows={3}
+            required
+          />
+          <InputMask
+            mask="(99)99999-9999"
+            name="phone"
+            value={formValues.phone}
+            onChange={handleChange}
+            placeholder="Celular*"
+            required
+          />
 
-          <SaveButton>Salvar</SaveButton>
-        </Group>
-      </Form>
-    </BoxContainer>
+          <button type="button" onClick={handleSave} className="save-button">
+            Salvar
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 
