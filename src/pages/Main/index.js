@@ -17,9 +17,15 @@ const Main = () => {
     description: "",
     phone: ""
   });
+  const [file, setFile] = useState(null);
 
   const handleFormValues = e => {
     const values = { ...formValues };
+    if (e.target.name === "image") {
+      setFile(e.target.files[0]);
+      console.log("entreo");
+      console.log(JSON.stringify(e.target.files[0]));
+    }
     values[e.target.name] = e.target.value;
 
     setFormValues(values);
@@ -43,17 +49,18 @@ const Main = () => {
 
   const createObject = async e => {
     e.preventDefault();
-    console.log("entrei");
+    console.log(JSON.stringify(file));
     const { title, description } = formValues;
 
     const headers = {
       "content-type": "multipart/form-data"
     };
-    const { data } = await api.post(
-      "/files",
-      { file: formValues.image },
-      headers
-    );
+
+    const formData = new FormData();
+
+    formData.append("file", file);
+    console.log(formData);
+    const { data } = await api.post("/files", { file: formData }, headers);
     console.log(data);
     const create = {
       imageId: data.imageId,
