@@ -9,6 +9,7 @@ import empty from "../../assets/images/empty.png";
 import "./styles.scss";
 
 const Main = () => {
+  const [loading, setLoading] = useState(false);
   const [showFormBox, setShowFormBox] = useState(false);
   const [objectsFound, setObjectsFound] = useState([]);
   const [formValues, setFormValues] = useState({
@@ -20,7 +21,11 @@ const Main = () => {
 
   const handleFormValues = e => {
     const values = { ...formValues };
-    values[e.target.name] = e.target.value;
+    if (e.target.name === "image") {
+      values[e.target.name] = e.target.files[0];
+    } else {
+      values[e.target.name] = e.target.value;
+    }
 
     setFormValues(values);
   };
@@ -42,28 +47,28 @@ const Main = () => {
   };
 
   const createObject = async e => {
+    setLoading(true);
     e.preventDefault();
-    console.log("entrei");
-    const { title, description } = formValues;
+    const { title, description, phone } = formValues;
 
-    const headers = {
-      "content-type": "multipart/form-data"
-    };
-    const { data } = await api.post(
-      "/files",
-      { file: formValues.image },
-      headers
-    );
-    console.log(data);
+    let formData = new FormData();
+    formData.append("file", formValues.image);
+
+    let { data } = await api.post("/files", formData, {
+      headers: { "Content-Type": "multipart/form-data" }
+    });
+
     const create = {
-      imageId: data.imageId,
+      imageId: data,
       title,
-      description
+      description,
+      phone
     };
 
     await api.post("/found-object", create);
-
     await fetchObjectsList();
+    setLoading(false);
+    setShowFormBox(false);
   };
 
   useEffect(() => {
@@ -81,6 +86,7 @@ const Main = () => {
             formValues={formValues}
             handleChange={handleFormValues}
             handleSave={createObject}
+            loading={loading}
           />
         </div>
       ) : (
@@ -91,8 +97,8 @@ const Main = () => {
           <div align="center">
             {objectsFound.length > 0 ? (
               <div className="card-container">
-                {objectsFound.map((item, index) => (
-                  <Card key={index + item.id} item={item} />
+                {objectsFound.map(item => (
+                  <Card key={Math.random()} item={item} />
                 ))}
               </div>
             ) : (

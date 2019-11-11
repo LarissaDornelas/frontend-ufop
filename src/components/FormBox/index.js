@@ -1,4 +1,5 @@
 import React from "react";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import InputMask from "react-input-mask";
 import CloseIcon from "@material-ui/icons/Close";
 import CameraAlt from "@material-ui/icons/CameraAlt";
@@ -6,7 +7,7 @@ import CameraAlt from "@material-ui/icons/CameraAlt";
 import "./styles.scss";
 
 const FormBox = props => {
-  const { actionButton, formValues, handleChange, handleSave } = props;
+  const { actionButton, formValues, handleChange, handleSave, loading } = props;
 
   return (
     <div className="box-container">
@@ -20,7 +21,6 @@ const FormBox = props => {
           <label className="image-selector" htmlFor="image">
             <CameraAlt /> <p>Adicionar Imagem</p>
           </label>
-          <p>{formValues.image}</p>
           <input
             name="image"
             id="image"
@@ -58,7 +58,7 @@ const FormBox = props => {
           />
 
           <button type="button" onClick={handleSave} className="save-button">
-            Salvar
+            {loading ? <CircularProgress /> : "Salvar"}
           </button>
         </div>
       </form>
