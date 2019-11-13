@@ -1,4 +1,6 @@
-.app-container {
+import styled from "styled-components";
+
+export const AppContainer = styled.div`
   display: flex;
   flex: 1;
   height: 98px;
@@ -9,9 +11,9 @@
   padding: 0px 20px;
   max-width: 1024px;
   box-shadow: -1px 6px 10px -9px rgba(0, 0, 0, 0.67);
-}
+`;
 
-.search-input {
+export const SearchInput = styled.input`
   background: #f4f4f4;
   border: none;
   padding: 0 20px;
@@ -25,9 +27,9 @@
   &:focus {
     outline: none;
   }
-}
+`;
 
-.search-button {
+export const SearchButton = styled.button`
   display: flex;
   flex: 2;
   border-radius: 7px;
@@ -45,4 +47,4 @@
   &:focus {
     outline: none;
   }
-}
+`;

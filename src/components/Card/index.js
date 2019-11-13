@@ -1,22 +1,31 @@
 import React from "react";
-import phoneIcon from "../../assets/images/phone.svg";
-import "./styles.scss";
+import { Phone, CalendarToday } from "@material-ui/icons";
+import { CardContainer, Description } from "./styles";
+import moment from "moment";
 
 const Card = props => {
-  const { imageId, title, description, phone } = props.item;
-  return (
-    <div className="card">
-      <img
-        src={`https://backend-ufop.herokuapp.com/images/${imageId}`}
-        alt="Imagem do Objeto"
-      />
-      <h2>{title}</h2>
-      <p>{description}</p>
+  const { imageId, title, description, phone, createdAt } = props.item;
 
-      <p>
-        <img className="icon" src={phoneIcon} alt="telefone" /> {phone}
-      </p>
-    </div>
+  const date = moment(createdAt);
+  moment.locale("pt-br");
+  return (
+    <CardContainer
+      background={`url(https://backend-ufop.herokuapp.com/images/${imageId})`}
+    >
+      <div class="imgWrapper"></div>
+      <h2>{title}</h2>
+      <Description>{description}</Description>
+
+      <div class="info">
+        <p>
+          <Phone color="secondary" /> &nbsp; {phone}
+        </p>
+        <p>
+          <CalendarToday color="secondary" />
+          &nbsp; {date.format("L")}
+        </p>
+      </div>
+    </CardContainer>
   );
 };
 

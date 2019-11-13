@@ -1,50 +1,51 @@
 import React from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import InputMask from "react-input-mask";
-import CloseIcon from "@material-ui/icons/Close";
-import CameraAlt from "@material-ui/icons/CameraAlt";
+import { Close, CameraAlt, Check } from "@material-ui/icons";
 
-import "./styles.scss";
+import {
+  BoxContainer,
+  CloseButton,
+  Form,
+  Group,
+  SaveButton,
+  ImageSelector,
+  ImageSelected
+} from "./styles";
 
 const FormBox = props => {
-  const { actionButton, formValues, handleChange, handleSave, loading } = props;
+  const {
+    handleFormBox,
+    formValues,
+    handleFormValues,
+    handleSave,
+    loading
+  } = props;
 
   return (
-    <div className="box-container">
+    <BoxContainer>
       <div>
-        <button className="close-button" onClick={actionButton}>
-          <CloseIcon color="disabled" />
-        </button>
+        <CloseButton onClick={handleFormBox}>
+          <Close color="disabled" />
+        </CloseButton>
       </div>
-      <form className="form">
-        <div className="image-group">
-          <label className="image-selector" htmlFor="image">
-            <CameraAlt /> <p>Adicionar Imagem</p>
-          </label>
-          <input
-            name="image"
-            id="image"
-            type="file"
-            accept="image/*"
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="form-group">
+      <Form>
+        <Group align="center" flex={1}>
           <h3>Adicionar Objeto</h3>
 
           <input
             name="title"
             value={formValues.title}
-            onChange={handleChange}
+            onChange={handleFormValues}
             placeholder="Titulo*"
             required
           />
           <textarea
             name="description"
             value={formValues.description}
-            onChange={handleChange}
+            onChange={handleFormValues}
             placeholder="Descrição*"
+            maxLength={200}
             rows={3}
             required
           />
@@ -52,17 +53,37 @@ const FormBox = props => {
             mask="(99)99999-9999"
             name="phone"
             value={formValues.phone}
-            onChange={handleChange}
+            onChange={handleFormValues}
             placeholder="Celular*"
             required
           />
 
-          <button type="button" onClick={handleSave} className="save-button">
-            {loading ? <CircularProgress color="secondary" /> : "Salvar"}
-          </button>
-        </div>
-      </form>
-    </div>
+          {!formValues.image ? (
+            <ImageSelector htmlFor="image">
+              <CameraAlt /> <p>Adicionar Imagem</p>
+            </ImageSelector>
+          ) : (
+            <ImageSelected htmlFor="image">
+              <Check /> <p>Imagem adicionada. Clique para alterar</p>
+            </ImageSelected>
+          )}
+          <input
+            name="image"
+            id="image"
+            type="file"
+            accept="image/*"
+            onChange={handleFormValues}
+          />
+          <SaveButton
+            type="button"
+            onClick={handleSave}
+            className="save-button"
+          >
+            {loading ? <CircularProgress color="disabled" /> : "Salvar"}
+          </SaveButton>
+        </Group>
+      </Form>
+    </BoxContainer>
   );
 };
 

@@ -1,4 +1,6 @@
-.header-container {
+import styled from "styled-components";
+
+export const HeaderContainer = styled.div`
   display: flex;
   flex: 1;
   justify-content: center;
@@ -9,4 +11,4 @@
     max-height: 73px;
     margin: 10px;
   }
-}
+`;

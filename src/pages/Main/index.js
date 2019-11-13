@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { api } from "../../services/api";
 import { Header } from "../../components/Header";
 import { AppBar } from "../../components/AppBar";
 import { FormBox } from "../../components/FormBox";
 import { Card } from "../../components/Card";
-
+import { api } from "../../services/api";
 import empty from "../../assets/images/empty.png";
-import "./styles.scss";
+import { MainContainer, Empty, CardsContainer } from "./styles";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Main = () => {
-  const [loading, setLoading] = useState(false);
   const [showFormBox, setShowFormBox] = useState(false);
-  const [objectsFound, setObjectsFound] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [foundObjects, setFoundObjects] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
   const [formValues, setFormValues] = useState({
     image: null,
     title: "",
@@ -30,6 +32,41 @@ const Main = () => {
     setFormValues(values);
   };
 
+  const fetchObjectList = async () => {
+    const { data } = await api.get("/found-object");
+    setFoundObjects(data);
+  };
+
+  const handleSave = async e => {
+    setLoading(true);
+    e.preventDefault();
+    const { image, title, description, phone } = formValues;
+
+    const formData = new FormData();
+    formData.append("file", image);
+
+    try {
+      const { data } = await api.post("/files", formData, {
+        headers: { "content-type": "multpart/form-data" }
+      });
+
+      const create = {
+        imageId: data,
+        title,
+        description,
+        phone
+      };
+
+      await api.post("/found-object", create);
+      setLoading(false);
+      fetchObjectList();
+      setShowFormBox(false);
+      toast.success("Objeto cadastrado com sucesso");
+    } catch (err) {
+      toast.error("Erro ao cadastrar objeto");
+    }
+  };
+
   const handleFormBox = () => {
     setFormValues({
       image: null,
@@ -41,38 +78,25 @@ const Main = () => {
     setShowFormBox(!showFormBox);
   };
 
-  const fetchObjectsList = async () => {
-    const { data } = await api.get("/found-object");
-    setObjectsFound(data);
-  };
-
-  const createObject = async e => {
-    setLoading(true);
-    e.preventDefault();
-    const { title, description, phone } = formValues;
-
-    let formData = new FormData();
-    formData.append("file", formValues.image);
-
-    let { data } = await api.post("/files", formData, {
-      headers: { "Content-Type": "multipart/form-data" }
-    });
-
-    const create = {
-      imageId: data,
-      title,
-      description,
-      phone
-    };
-
-    await api.post("/found-object", create);
-    await fetchObjectsList();
-    setLoading(false);
-    setShowFormBox(false);
+  const handleSearch = e => {
+    setSearchValue(e.target.value);
+    console.log(searchValue);
   };
 
   useEffect(() => {
-    fetchObjectsList();
+    async function search() {
+      if (searchValue.length > 3) {
+        const { data } = await api.get(`/found-object?busca=${searchValue}`);
+        setFoundObjects(data);
+      } else if (searchValue.length === 0) {
+        fetchObjectList();
+      }
+    }
+    search();
+  }, [searchValue]);
+
+  useEffect(() => {
+    fetchObjectList();
   }, []);
 
   return (
@@ -80,31 +104,31 @@ const Main = () => {
       <Header />
 
       {showFormBox ? (
-        <div className="main-container">
+        <MainContainer>
           <FormBox
-            actionButton={handleFormBox}
+            handleFormBox={handleFormBox}
             formValues={formValues}
-            handleChange={handleFormValues}
-            handleSave={createObject}
+            handleFormValues={handleFormValues}
             loading={loading}
+            handleSave={handleSave}
           />
-        </div>
+        </MainContainer>
       ) : (
         <>
-          <div className="main-container">
-            <AppBar actionButton={handleFormBox} />
-          </div>
+          <MainContainer>
+            <AppBar handleFormBox={handleFormBox} handleSearch={handleSearch} />
+          </MainContainer>
           <div align="center">
-            {objectsFound.length > 0 ? (
-              <div className="card-container">
-                {objectsFound.map(item => (
+            {foundObjects.length > 0 ? (
+              <CardsContainer>
+                {foundObjects.map(item => (
                   <Card key={Math.random()} item={item} />
                 ))}
-              </div>
+              </CardsContainer>
             ) : (
-              <div className="empty">
+              <Empty>
                 <img src={empty} alt="Não há objetos cadastrados" />
-              </div>
+              </Empty>
             )}
           </div>
         </>

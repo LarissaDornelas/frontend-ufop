@@ -1,16 +1,17 @@
 import React from "react";
 import AddIcon from "@material-ui/icons/Add";
-import "./styles.scss";
+import { AppContainer, SearchInput, SearchButton } from "./styles";
 
 const AppBar = props => {
-  const { actionButton } = props;
+  const { handleFormBox, handleSearch } = props;
+
   return (
-    <div className="app-container">
-      <input className="search-input" placeholder="Buscar Objeto" />
-      <button className="search-button" type="button" onClick={actionButton}>
+    <AppContainer>
+      <SearchInput placeholder="Buscar Objeto" onChange={handleSearch} _ />
+      <SearchButton type="button" onClick={handleFormBox}>
         <AddIcon /> <p>Adicionar Objeto</p>
-      </button>
-    </div>
+      </SearchButton>
+    </AppContainer>
   );
 };
 
